@@ -2,7 +2,7 @@ const fs = require('fs');
 const { exec } = require('youtube-dl-exec');
 
 // YouTube video URL
-const videoUrl = '';
+const videoUrl = 'https://www.youtube.com/watch?v=hFDcoX7s6rE';
 
 // Output file path
 const outputPath = `youtube_${Date.now()}.mp3`;
