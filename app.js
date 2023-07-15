@@ -1,32 +1,26 @@
 const fs = require('fs');
-const { exec } = require('youtube-dl-exec');
-
-// YouTube video URL
-const videoUrl = 'https://www.youtube.com/watch?v=hFDcoX7s6rE';
-
-// Output file path
-const outputPath = `youtube_${Date.now()}.mp3`;
+const download = require('./download-video');
 
 (async () => {
-  try {
+  // Get video urls from separate file
+  const videoUrlsJSON = fs.readFileSync('./video-urls.json', 'utf8');
+  let videoUrls = JSON.parse(videoUrlsJSON);
 
+  for (const videoUrl of videoUrls) {
     // Download video
-    console.log('Downloading video...');
+    await download(videoUrl);
     
-    await exec(videoUrl, {
-        audioFormat: 'mp3',
-        o: 'output.%(ext)s',
-        x: true,
-        ffmpegLocation: 'C:\\ffmpeg_230708\\bin\\ffmpeg.exe'
-    });
-
-    console.log('Download complete.');
-
-    // Rename the downloaded file to the desired output path
-    fs.renameSync('output.mp3', outputPath);
-
-    console.log(`Conversion to ${outputPath} complete.`);
-  } catch (error) {
-    console.error('An error occurred:', error);
+    // Remove video url from file
+    videoUrls = updateVideoUrls(videoUrls, videoUrl);
   }
 })();
+
+function updateVideoUrls(videoUrls, videoUrl) {
+  const updatedVideoUrls = [...videoUrls];
+  updatedVideoUrls.splice(updatedVideoUrls.indexOf(videoUrl), 1);
+  fs.writeFileSync('./video-urls.json', JSON.stringify(updatedVideoUrls));
+
+  // Update videoUrls variable for the next iteration
+  videoUrls = updatedVideoUrls;
+  return videoUrls;
+}
