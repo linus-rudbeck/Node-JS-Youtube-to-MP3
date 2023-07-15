@@ -23,7 +23,7 @@ module.exports = async (videoUrl) => {
     });
     const videoName = formatVideoName(videoNameCommand.stdout);
     
-    const outputPath = `./output/${videoName}_${Date.now()}.mp3`;
+    const outputPath = `./downloads/${videoName}_${Date.now()}.mp3`;
 
     // Download video
     console.log('Downloading video: ', videoName);
